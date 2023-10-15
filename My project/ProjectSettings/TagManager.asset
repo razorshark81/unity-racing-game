@@ -10,11 +10,27 @@ TagManager:
   - Fire
   - NavMesh
   - Waypoint
+  - playerCar
+  - finishLine
+  - turningPointEntry
+  - turningPointExit
+  - AI3
+  - lapCOmpleteTrigger
+  - 7
+  - 1
+  - 3
+  - 4
+  - 5
+  - 2
+  - 6
+  - AI1
+  - AI2
+  - halfPointTrigger
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - raycast
   - Water
   - UI
   - 
