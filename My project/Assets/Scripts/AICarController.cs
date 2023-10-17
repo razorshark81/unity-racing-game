@@ -54,7 +54,7 @@ public class AICarController : MonoBehaviour
             Debug.LogError("No waypoints assigned to AI car.");
             return;
         }
-        if (Vector3.Distance(transform.position, waypoints[currentWaypointIndex].position) < 10.0f)
+        if (Vector3.Distance(transform.position, waypoints[currentWaypointIndex].position) <15.0f)
         {
             currentWaypointIndex++;
             if (currentWaypointIndex >= waypoints.Count)
@@ -82,19 +82,21 @@ public class AICarController : MonoBehaviour
             if (leftObstacleDetected&&!rightObstacleDetected)
             {
                 Steer(maxSteerAngle);
-                
+                print("leftovertaking");
+
                 moveSpeed = originalMoveSpeed + 200;
             }
             if (rightObstacleDetected && !leftObstacleDetected)
             {
                 Steer(-maxSteerAngle);
                 moveSpeed = originalMoveSpeed +200;
-                
+                print("rightovertaking");
             }
             else if (!leftObstacleDetected && !rightObstacleDetected) {
                 Steer(-maxSteerAngle);
                 moveSpeed = originalMoveSpeed + 200;
-                
+                print("rightovertaking");
+
             }
             
         }
@@ -102,14 +104,16 @@ public class AICarController : MonoBehaviour
 
         if (leftObstacleDetected && !rightObstacleDetected)
         {
-            Steer(maxSteerAngle); // Steer right to avoid left obstacle
+            Steer(10); // Steer right to avoid left obstacle
             
             moveSpeed = originalMoveSpeed;
+            print("leftobstacle");
         }
         else if (!leftObstacleDetected && rightObstacleDetected)
         {
-            Steer(-maxSteerAngle); // Steer left to avoid right obstacle
-            ;
+            Steer(-10); // Steer left to avoid right obstacle
+            print("rightobstacle");
+            
             moveSpeed = originalMoveSpeed;
         }
         else if (leftObstacleDetected && rightObstacleDetected)
@@ -119,7 +123,8 @@ public class AICarController : MonoBehaviour
             float steerAngle = Vector3.SignedAngle(transform.forward, targetDirection, Vector3.up);
             steerAngle = Mathf.Clamp(steerAngle, -maxSteerAngle, maxSteerAngle);
             Steer(steerAngle);
-            
+            print("both");
+
         }
         
         else
@@ -133,7 +138,8 @@ public class AICarController : MonoBehaviour
         if (obstacleDetected)
         {
             moveSpeed = obstacleSlowdown;
-            
+            print("centerslowing");
+
         }
         currentSteerAngle = Vector3.SignedAngle(transform.forward, targetDirection, Vector3.up);
         currentSteerAngle = Mathf.Abs(currentSteerAngle);
@@ -141,11 +147,13 @@ public class AICarController : MonoBehaviour
         {
             // Reduce speed during sharp turns.
             moveSpeed *= maxSteerSpeedReduction;
+            print("slowing down maxsteer");
         }
         if (currentSteerAngle < -maxSteerAngleThreshold)
         {
             // Reduce speed during sharp turns.
             moveSpeed *= maxSteerSpeedReduction;
+            print("slowing down maxsteer");
         }
 
         Drive();
@@ -168,7 +176,7 @@ public class AICarController : MonoBehaviour
         {
             // Reduce speed before a sharp turn.
             moveSpeed *= maxSteerSpeedReduction;
-            print("Slowing Down");
+            print("Slowing Down sharp turn" );
         }
 
     }
