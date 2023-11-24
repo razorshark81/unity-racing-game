@@ -560,7 +560,7 @@ namespace RoadArchitect
             {
                 road.EditorCameraSetSingle();
             }
-            road.editorPlayCamera = (Camera)EditorGUILayout.ObjectField("Editor play camera:", road.editorPlayCamera, typeof(Camera), true);
+            
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("Reset", GUILayout.Width(70f)))
             {

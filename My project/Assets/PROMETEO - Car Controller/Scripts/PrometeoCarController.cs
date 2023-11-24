@@ -11,9 +11,11 @@ something useful for your game. Best regards, Mena.
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class PrometeoCarController : MonoBehaviour
 {
@@ -94,7 +96,7 @@ public class PrometeoCarController : MonoBehaviour
       [Space(10)]
       //The following variable lets you to set up a UI text to display the speed of your car.
       public bool useUI = false;
-      public Text carSpeedText; // Used to store the UI object that is going to show the speed of the car.
+      public TextMeshProUGUI carSpeedText; // Used to store the UI object that is going to show the speed of the car.
 
     //SOUNDS
 
@@ -174,7 +176,7 @@ public class PrometeoCarController : MonoBehaviour
     //In this part, we set the 'carRigidbody' value with the Rigidbody attached to this
     //gameObject. Also, we define the center of mass of the car with the Vector3 given
     //in the inspector.
-    carRigidbody = gameObject.GetComponent<Rigidbody>();
+        carRigidbody = gameObject.GetComponent<Rigidbody>();
       carRigidbody.centerOfMass = bodyMassCenter;
 
       //Initial setup to calculate the drift value of the car. This part could look a bit
@@ -218,10 +220,10 @@ public class PrometeoCarController : MonoBehaviour
         // the speed of the car and CarSounds() controls the engine and drifting sounds. Both methods are invoked
         // in 0 seconds, and repeatedly called every 0.1 seconds.
         if(useUI){
-          InvokeRepeating("CarSpeedUI", 0f, 0.1f);
+          InvokeRepeating("CarSpeedUI", 0f, 0.01f);
         }else if(!useUI){
           if(carSpeedText != null){
-            carSpeedText.text = "0";
+            carSpeedText.text= "0";
           }
         }
 
@@ -251,31 +253,31 @@ public class PrometeoCarController : MonoBehaviour
           }
         }
 
-        if(useTouchControls){
-          if(throttleButton != null && reverseButton != null &&
-          turnRightButton != null && turnLeftButton != null
-          && handbrakeButton != null){
+        if (useTouchControls)
+        {
 
-            throttlePTI = throttleButton.GetComponent<PrometeoTouchInput>();
+
+            
             reversePTI = reverseButton.GetComponent<PrometeoTouchInput>();
             turnLeftPTI = turnLeftButton.GetComponent<PrometeoTouchInput>();
             turnRightPTI = turnRightButton.GetComponent<PrometeoTouchInput>();
-            handbrakePTI = handbrakeButton.GetComponent<PrometeoTouchInput>();
+            
             touchControlsSetup = true;
+        }
 
-          }else{
+        else
+        {
             String ex = "Touch controls are not completely set up. You must drag and drop your scene buttons in the" +
             " PrometeoCarController component.";
             Debug.LogWarning(ex);
-          }
         }
+        
 
     }
     
     // Update is called once per frame
     void Update()
     {
-
 
         //CAR DATA
 
@@ -300,7 +302,7 @@ public class PrometeoCarController : MonoBehaviour
       */
       if (useTouchControls && touchControlsSetup){
 
-        if(throttlePTI.buttonPressed){
+        if(throttlePTI.buttonPressed &&!reversePTI.buttonPressed){
           CancelInvoke("DecelerateCar");
           deceleratingCar = false;
           GoForward();
@@ -326,12 +328,9 @@ public class PrometeoCarController : MonoBehaviour
           RecoverTraction();
         }
         if((!throttlePTI.buttonPressed && !reversePTI.buttonPressed)){
-          ThrottleOff();
+          GoForward();
         }
-        if((!reversePTI.buttonPressed && !throttlePTI.buttonPressed) && !handbrakePTI.buttonPressed && !deceleratingCar){
-          InvokeRepeating("DecelerateCar", 0f, 0.1f);
-          deceleratingCar = true;
-        }
+
         if(!turnLeftPTI.buttonPressed && !turnRightPTI.buttonPressed && steeringAxis != 0f){
           ResetSteeringAngle();
         }
